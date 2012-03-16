@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Location</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('#findme').click(function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                } else {
+                    error('Geolocation not supported');
+                }
+            });
+        });  
+
+
+        function success(position) {
+          var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          var myOptions = {
+            zoom: 15,
+            center: latlng,
+            mapTypeControl: false,
+            navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var mapcanvas = $('#mapcanvas');
+          var map = new google.maps.Map(mapcanvas[0], myOptions);
+          var marker = new google.maps.Marker({
+              position: latlng,
+              map: map,
+              title:"I am here!"
+          });
+        }
+       
+
+        function error(msg) {
+          var errMsg = typeof msg == 'string' ? msg : "Geolocation failed";
+          $('#msg').html(errMsg);
+        }
+    </script>
+
+</head>
+<body>
+    <div data-role="page">
+        <div data-role="header">
+            <h1>My Location</h1>
+        </div>
+        <div data-role="content">
+            <input id="findme" type="button" value="Find Me" />
+            <div id="msg"></div>
+            <div id="mapcanvas" style="height: 400px; width: 560px;"></div>
+        </div>
+    </div>
+</body>
+</html>
